@@ -14,16 +14,13 @@ Uses my Stv library of c++ assumed to be in ../stv/*
 
 
 # TODO:
-
+...
 * get ridda Qt6 runtime error messages and see what can be fixed
 
-* ```
-   find
+* find
       find all at start with count (maybe cache of row,cols?)
          if FindStr exists,
             pos/count right after filename
             hilite all on screen
       list of FindStr's, not just 1.  sepd by ||| ?
       during replace, if it won't fit within line, warn but don't stop
-```
-
