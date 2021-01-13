@@ -14,9 +14,13 @@ Uses my Stv library of c++ assumed to be in ../stv/*
 
 
 # TODO:
-* ... get ridda Qt6 runtime error messages and see what can be fixed
+* 
+... 
+   get ridda Qt6 runtime error messages and see what can be fixed
 
-* ... find
+* 
+... 
+   find
       find all at start with count (maybe cache of row,cols?)
          if FindStr exists,
             pos/count right after filename
