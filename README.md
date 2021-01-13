@@ -1,5 +1,5 @@
-# ned (nifty text editor)
-...
+## ned (nifty text editor)
+``` 
 an old school 80 columns (ONLY!) text editor.
 originally wrote on the C=64 in 6510 asm.  Then to C.  Then barely to C++.
 
@@ -11,10 +11,11 @@ then on MacClassic, then in c++ on win95.
 Raspberry Pi OS is next.
 
 Uses my Stv library of c++ assumed to be in ../stv/*
+```
 
 
-# TODO:
-...
+## TODO:
+```
 * get ridda Qt6 runtime error messages and see what can be fixed
 
 * find
