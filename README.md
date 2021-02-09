@@ -1,22 +1,23 @@
 ## ned (nifty text editor)
 ``` 
-an old school 80 columns (ONLY!) text editor.
-originally wrote on the C=64 in 6510 asm.  Then to C.  Then barely to C++.
+an old school 80 columns monospace (ONLY!) text editor.
+originally wrote on the C=64 in 6510 asm.  Then to C on Amiga500, then msdos, then MacClassic, then on win95/10 in barely C++
 
-environment:  ChromeOS' Debian linux container.  c++.  Qt 6.
-via QtCreator dev env
-
-originally written on in 6510 on C=64, then in C on Amiga500, then on msdos, 
-then on MacClassic, then in c++ on win95.
-Raspberry Pi OS is next.
+environment:  
+  qtcreator and c++
+  RasPi     Qt5 (until i can apt install Qt6 sigh - so both qmake and CMake)
+  ChromeOS  Crostini container (based on Debian buster).  Qt6
 
 Uses my Stv library of c++ assumed to be in ../stv/*
-```
 
+Also note that font comes from ~/.config/StephenHazel/NEd.conf 's font and fontpt lines
+(or defaults to Monospace 14 and 30 rows)
+
+```
 
 ## TODO:
 ```
-* get ridda Qt6 runtime error messages and see what can be fixed
+* get ridda Qt6 runtime error messages on chromeos and see what can be fixed
 
 * find
       find all at start with count (maybe cache of row,cols?)

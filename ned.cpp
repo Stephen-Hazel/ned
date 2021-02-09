@@ -27,6 +27,7 @@ char   KeyMode, *KMMsg, *KMBuf, KM1;
 bool (*KMCmd)();
 row    Info, Empt;
 ScrDef Scr;
+static QFont *Font;
 
 
 //------------------------------------------------------------------------------
@@ -58,6 +59,7 @@ void Ro2Scr (prow pro, ubyte y, ubyte bgn, ubyte end, bool flip)
   QPen   penf (fc), penb (bc);
   QBrush            brs  (bc);
   QPainter p (Scr.pm);
+   p.setFont (*Font);
    p.setPen (penb);   p.setBrush (brs);
    p.drawRect (bgn*Scr.wLn/80, y*Scr.hCh, (end-bgn+1)*Scr.wLn/80, Scr.hCh);
    p.setPen (penf);
@@ -103,7 +105,7 @@ bool PutBlk ()
 // if part of block is visible, flip each char in block, pause, then restore
 { sword topScr, botScr;
   ubyte bgnCol, endCol;
-  uword r, i;
+  uword i, r;
    botScr = (topScr = SC(sword,CsrRow-ScrRow)) + EndScr;   // Row[] indexes
    if ((BlkBgnRow >= botScr) || (BlkEndRow <= topScr))  return true;
 
@@ -111,8 +113,9 @@ bool PutBlk ()
    if ((topScr = BlkBgnRow-topScr) < 0)      topScr = 0;   // Scrn indexes
    if (BlkBgnCol == BlkEndCol)  {bgnCol = 0;          endCol = 79;}
    else                         {bgnCol = BlkBgnCol;  endCol = BlkEndCol;}
-   for (r = CsrRow-ScrRow+topScr, i = topScr;  i <= botScr;  i++, r++)
-      Ro2Scr ((r < EndRow) ? Row [r] : & Empt, i+1,
+   for (r = SC(uword,CsrRow-ScrRow+topScr), i = SC(uword,topScr);
+        i <= botScr;  i++, r++)
+      Ro2Scr ((r < EndRow) ? Row [r] : & Empt, SC(ubyte,i+1),
               bgnCol, endCol, true);
    WIN->update ();   QSleep (125);     // 1/8 sec i hope
    PutScr ();   PutIt ();              // and restore
@@ -206,7 +209,8 @@ void NEd::keyPressEvent (QKeyEvent *e)
 
 void NEd::wheelEvent (QWheelEvent  *e)
 { int j = e->angleDelta ().y () / 40;
-//DBG("mousewheel=`d", j);
+DBG("mousewheel=`d ScrRow=`d CsrRow=`d, EndRow=`d EndScr=`d",
+j, ScrRow, CsrRow, EndRow, EndScr);
    if (j >   EndScr )  j =  EndScr;
    if (j < (-EndScr))  j = -EndScr;
    if (j >= 0) {                    // scroll up
@@ -217,7 +221,7 @@ void NEd::wheelEvent (QWheelEvent  *e)
       if (EndRow > (EndScr+1)) {
         uword t = EndRow-1 - (EndScr-ScrRow);
          if (CsrRow != t)
-            {if ((CsrRow + j) > t)   CsrRow = t;        else CsrRow += j;}
+            {if ((CsrRow + j) > t)   CsrRow = t;        else CsrRow -= j;}
       }
       else if (CsrRow != ScrRow) CsrRow = ScrRow;
    }
@@ -249,28 +253,35 @@ void NEd::resizeEvent (QResizeEvent *e)
 NEd::NEd (QWidget *parent): QMainWindow (parent) {}
 
 
+//0 "HDMI-1" QRect(0,36 1080x1884) Qt::ScreenOrientation(PortraitOrientation) 60
+//^ raspi
 //#include <QDebug>
-//qDebug () << "want-scr:" << scr << "cur-scr:" << screen ()->name ()
-//<< "pri-scr:" << QGuiApplication::primaryScreen ()->name ();
+//for (int i = 0;  i < scrLs.size ();  i++)
 //qDebug () << i << scrLs [i]->name () << scrLs [i]->availableGeometry ()
 //<< scrLs [i]->orientation () << scrLs [i]->refreshRate ();
 
-
 void NEd::Init ()                      // font MUST BE MONOSPACE FIXED WIDTH !!
-{ QFont f ("Cousine", 12);             // calc our window size from our font
-//QFont f ("Noto Sans Mono", 12);      // calc our window size from our font
-   QApplication::setFont (f);
-  QFontMetrics fm (f);                 // 80 cols - ONLY EVER !!!
-  TStr s;   MemSet (s, 'A', 80);   s [80] ='\0';
+{ QSettings qs ("StephenHazel", "NEd");
+  TStr ff, s;
+  int  pt = 14, nr = 30;
+   StrCp (ff, CC("Monospace"));        // default to Monospace 14
+   if (qs.contains ("font")) {
+      StrCp (ff, UnQS (qs.value ("font").toString ()));
+      pt = qs.value ("fontpt").toInt ();
+   }
+   Font = new QFont (ff, pt);          // calc window size from font
+   QApplication::setFont (*Font);
+  QFontMetrics fm (*Font);             // 80 cols - ONLY EVER !!!
+   MemSet (s, 'A', 80);   s [80] ='\0';
    Scr.wLn = SC(uword,fm.horizontalAdvance (s));      // cuz monospace can have
    Scr.hCh = SC(uword,fm.height ())-1;                // fractional width sigh
    Scr.hBL = SC(uword,fm.ascent ());
-//DBG("wLn=`d wCh=`d+`d/80 hCh=`d", Scr.wLn, Scr.wLn/80, Scr.wLn%80, Scr.hCh);
+DBG("ff=`s pt=`d wLn=`d wCh=`d+`d/80 hCh=`d",
+ff, pt, Scr.wLn, Scr.wLn/80, Scr.wLn%80, Scr.hCh);
 
-  QSettings qs ("StephenHazel", "NEd");
-  int nr = 30;                         // default to 80x30
+// default to 80x30
    if (qs.contains ("rows"))  nr = qs.value ("rows").toInt ();
-   EndScr = nr-1;   Scr.pm = new QPixmap (Scr.wLn, (nr+1)*Scr.hCh);
+   EndScr = SC(ubyte,nr-1);   Scr.pm = new QPixmap (Scr.wLn, (nr+1)*Scr.hCh);
 //DBG("rows=`d", nr);
 
    resize (Scr.wLn, (nr+1)*Scr.hCh);   move (0, 0);   show ();
@@ -309,11 +320,13 @@ void NEd::Init ()                      // font MUST BE MONOSPACE FIXED WIDTH !!
 
 NEd::~NEd ()
 { QSettings s ("StephenHazel", "NEd");
+   s.setValue ("font",   Font->family ());
+   s.setValue ("fontpt", Font->pointSize ());
    s.setValue ("rows", EndScr+1);
    s.setValue ("pos",  pos ());
-   s.setValue ("scr",  screen ()->name ());
-
+   s.setValue ("scr",  windowHandle ()->screen ()->name ());
    Wipe ();
+   delete Font;
    if (Scr.pm)  delete Scr.pm;
    Scr.pm = nullptr;
 }
