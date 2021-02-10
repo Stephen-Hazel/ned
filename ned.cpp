@@ -276,8 +276,8 @@ void NEd::Init ()                      // font MUST BE MONOSPACE FIXED WIDTH !!
    Scr.wLn = SC(uword,fm.horizontalAdvance (s));      // cuz monospace can have
    Scr.hCh = SC(uword,fm.height ())-1;                // fractional width sigh
    Scr.hBL = SC(uword,fm.ascent ());
-DBG("ff=`s pt=`d wLn=`d wCh=`d+`d/80 hCh=`d",
-ff, pt, Scr.wLn, Scr.wLn/80, Scr.wLn%80, Scr.hCh);
+//DBG("ff=`s pt=`d wLn=`d wCh=`d+`d/80 hCh=`d",
+//ff, pt, Scr.wLn, Scr.wLn/80, Scr.wLn%80, Scr.hCh);
 
 // default to 80x30
    if (qs.contains ("rows"))  nr = qs.value ("rows").toInt ();
