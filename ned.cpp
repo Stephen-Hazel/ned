@@ -209,8 +209,8 @@ void NEd::keyPressEvent (QKeyEvent *e)
 
 void NEd::wheelEvent (QWheelEvent  *e)
 { int j = e->angleDelta ().y () / 40;
-DBG("mousewheel=`d ScrRow=`d CsrRow=`d, EndRow=`d EndScr=`d",
-j, ScrRow, CsrRow, EndRow, EndScr);
+//DBG("mousewheel=`d ScrRow=`d CsrRow=`d, EndRow=`d EndScr=`d",
+//j, ScrRow, CsrRow, EndRow, EndScr);
    if (j >   EndScr )  j =  EndScr;
    if (j < (-EndScr))  j = -EndScr;
    if (j >= 0) {                    // scroll up
