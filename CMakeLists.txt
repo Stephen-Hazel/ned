@@ -28,19 +28,20 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(PROJECT_SOURCES
-        ned.cpp
         ned.h
-        SubCmd.cpp
-        CmdMap.cpp
-        CmdCsr.cpp
-        CmdIns.cpp
-        CmdBlk.cpp
-        CmdFind.cpp
-        CmdFile.cpp
-        CmdEtc.cpp
+        ned.cpp
         ../stv/os.cpp
         ../stv/ui.cpp
         ../stv/uiKey.cpp
+        SubCmd.cpp
+        CmdCsr.cpp
+        CmdIns.cpp
+        CmdFind.cpp
+        CmdFile.cpp
+        CmdBlk.cpp
+        CmdEtc.cpp
+        CmdMap.cpp
+        ned.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

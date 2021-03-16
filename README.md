@@ -1,14 +1,16 @@
-## ned (nifty text editor)
+## ned (Nifty text EDitor)
 ``` 
 an old school 80 columns monospace (ONLY!) text editor.
-originally wrote on the C=64 in 6510 asm.  Then to C on Amiga500, then msdos, then MacClassic, then on win95/10 in barely C++
+originally on the C=64 in 6510 asm.  Then to C on Amiga500, then msdos, then MacClassic, then on win95/10 in barely C++
 
 environment:  
   qtcreator and c++
-  RasPi     Qt5 (until i can apt install Qt6 sigh - so both qmake and CMake)
-  ChromeOS  Crostini container (based on Debian buster).  Qt6
+  Kubuntu   Qt6
+  ChromeOS  Qt6 Crostini container (based on Debian buster)
+  RasPi     Qt5 (until i can apt install Qt6 sigh - use qmake there)
 
 Uses my Stv library of c++ assumed to be in ../stv/*
+  add ../stv/os.cpp, ui.cpp, uiKey.cpp
 
 Also note that font comes from ~/.config/StephenHazel/NEd.conf 's font and fontpt lines
 (or defaults to Monospace 14 and 30 rows)
